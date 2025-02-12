@@ -26,8 +26,8 @@ jobs:
       - name: Install project dependencies
         run: npm install
 
-      - name: Build Angular app
-        run: ng build --configuration production --output-path docs --base-href /bharatramesh.dev/
+      - name: Build Angular app (Browser Only)
+        run: ng build --configuration production
 
       - name: Ensure docs directory exists
         run: mkdir -p docs
