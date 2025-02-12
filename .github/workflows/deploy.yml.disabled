@@ -3,7 +3,7 @@ name: Deploy Angular to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main  # Runs the workflow when pushing to main
 
 jobs:
   build-and-deploy:
@@ -33,9 +33,10 @@ jobs:
       - name: Disable Jekyll
         run: touch docs/.nojekyll
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (gh-pages branch)
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: main
+          branch: gh-pages  # Ensures deployment only updates 'gh-pages' branch
           folder: docs
+          clean: true
           token: ${{ secrets.GH_PAGES_DEPLOY }}
