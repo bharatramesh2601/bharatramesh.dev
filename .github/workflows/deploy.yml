@@ -3,7 +3,7 @@ name: Deploy Angular to GitHub Pages
 on:
   push:
     branches:
-      - main  # Runs this workflow when pushing to the main branch
+      - main
 
 jobs:
   build-and-deploy:
@@ -32,4 +32,4 @@ jobs:
         with:
           branch: main
           folder: docs
-          clean: true
+          token: ${{ secrets.GH_PAGES_DEPLOY }}
