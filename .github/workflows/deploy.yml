@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: false  # Prevent GitHub token conflicts
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -29,8 +29,12 @@ jobs:
       - name: Build Angular app (Browser Only)
         run: ng build --configuration production
 
-      - name: Ensure docs directory exists
-        run: mkdir -p docs
+      - name: Move files to correct location
+        run: |
+          if [ -d "docs/browser" ]; then
+            mv docs/browser/* docs/
+            rm -rf docs/browser
+          fi
 
       - name: Disable Jekyll
         run: touch docs/.nojekyll
@@ -38,7 +42,7 @@ jobs:
       - name: Deploy to GitHub Pages (gh-pages branch)
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages  # Ensures deployment only updates 'gh-pages' branch
+          branch: gh-pages
           folder: docs
           clean: true
           token: ${{ secrets.GH_PAGES_DEPLOY }}
