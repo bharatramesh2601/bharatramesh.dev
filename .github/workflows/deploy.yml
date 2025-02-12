@@ -27,6 +27,12 @@ jobs:
       - name: Build Angular app
         run: ng build --configuration production --output-path docs --base-href /bharatramesh.dev/
 
+      - name: Ensure docs directory exists
+        run: mkdir -p docs
+
+      - name: Disable Jekyll
+        run: touch docs/.nojekyll
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
