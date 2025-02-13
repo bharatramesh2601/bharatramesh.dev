@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { HeroComponent } from './components/hero/hero.component';  // ✅ Import HeroComponent
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true, // ✅ Standalone Component Mode
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss'],
+  imports: [HeroComponent]  // ✅ Register HeroComponent here
 })
 export class AppComponent {
-  title = 'bharatramesh.dev';
+  title = 'My Portfolio';
 }
