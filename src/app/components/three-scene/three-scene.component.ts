@@ -33,7 +33,7 @@ export class ThreeSceneComponent implements AfterViewInit {
 
     // Setup Camera
     this.camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    this.camera.position.set(0, 3, 8); // Adjusted position for better view
+    this.camera.position.set(0, 5, 10); // Adjusted for a better view
 
     // Setup Renderer
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -43,6 +43,13 @@ export class ThreeSceneComponent implements AfterViewInit {
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(10, 10, 10);
     this.scene.add(light);
+
+    // ✅ Add Ground Plane (Grass/Asphalt Surface)
+    const planeGeometry = new THREE.PlaneGeometry(50, 50);
+    const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
+    const ground = new THREE.Mesh(planeGeometry, planeMaterial);
+    ground.rotation.x = -Math.PI / 2; // ✅ Rotate to lie flat on the ground
+    this.scene.add(ground);
   }
 
   private loadCarModel() {
@@ -59,22 +66,41 @@ export class ThreeSceneComponent implements AfterViewInit {
     requestAnimationFrame(() => this.animate());
   
     if (this.carModel) {
-      if (this.keyboard['ArrowUp']) this.carModel.position.z += 0.1;
-      if (this.keyboard['ArrowDown']) this.carModel.position.z -= 0.1;
-      if (this.keyboard['ArrowLeft']) this.carModel.rotation.y += 0.05;
-      if (this.keyboard['ArrowRight']) this.carModel.rotation.y -= 0.05;
+
+      const speed = .5;
+      const rotationSpeed = 0.05;
+      
+      // ✅ Get the car's forward direction based on rotation
+      const direction = new THREE.Vector3();
+      this.carModel.getWorldDirection(direction);
+
+      // ✅ Move forward and backward based on the car's facing direction
+      if (this.keyboard['ArrowUp']) {
+        this.carModel.position.addScaledVector(direction, speed);
+      }
+      if (this.keyboard['ArrowDown']) {
+        this.carModel.position.addScaledVector(direction, -speed);
+      }
+
+      // ✅ Rotate the car (Left/Right Arrow Keys)
+      if (this.keyboard['ArrowLeft']) {
+        this.carModel.rotation.y += rotationSpeed;
+      }
+      if (this.keyboard['ArrowRight']) {
+        this.carModel.rotation.y -= rotationSpeed;
+      }
   
-      // Update camera position to follow the car
+      // ✅ Make Camera Follow the Car from Behind
       // this.camera.position.set(
-      //   this.carModel.position.x,
+      //   this.carModel.position.x - direction.x * 5,
       //   this.carModel.position.y + 2,
-      //   this.carModel.position.z + 5
+      //   this.carModel.position.z - direction.z * 5
       // );
-      // this.camera.lookAt(this.carModel.position);
+      this.camera.lookAt(this.carModel.position);
     }
   
     this.renderer.render(this.scene, this.camera);
-  }  
+  }
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
