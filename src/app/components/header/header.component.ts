@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Host, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +8,13 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
   menuOpen = false;
+  isScrolled = false;
 
+  @HostListener("window:scroll", [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50;
+  }
+  
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
