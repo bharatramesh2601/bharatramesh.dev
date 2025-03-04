@@ -22,6 +22,8 @@ export class ThreeSceneComponent implements AfterViewInit {
     this.animate();
   }
 
+  // Move Car Based on Keyboard Input
+  // inspired by https://bruno-simon.com/, https://threejs-journey.com/?c=p1#summary, https://sketchfab.com/store
   private initThreeJS() {
     const canvas = this.canvasRef.nativeElement;
 
@@ -55,26 +57,34 @@ export class ThreeSceneComponent implements AfterViewInit {
 
   private animate() {
     requestAnimationFrame(() => this.animate());
-
-    // Move Car Based on Keyboard Input
-    // inspired by https://bruno-simon.com/, https://threejs-journey.com/?c=p1#summary, https://sketchfab.com/store
+  
     if (this.carModel) {
-      if (this.keyboard['ArrowUp']) this.carModel.position.z -= 0.1;
-      if (this.keyboard['ArrowDown']) this.carModel.position.z += 0.1;
+      if (this.keyboard['ArrowUp']) this.carModel.position.z += 0.1;
+      if (this.keyboard['ArrowDown']) this.carModel.position.z -= 0.1;
       if (this.keyboard['ArrowLeft']) this.carModel.rotation.y += 0.05;
       if (this.keyboard['ArrowRight']) this.carModel.rotation.y -= 0.05;
+  
+      // Update camera position to follow the car
+      // this.camera.position.set(
+      //   this.carModel.position.x,
+      //   this.carModel.position.y + 2,
+      //   this.carModel.position.z + 5
+      // );
+      // this.camera.lookAt(this.carModel.position);
     }
-
+  
     this.renderer.render(this.scene, this.camera);
-  }
+  }  
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
+    event.preventDefault(); // ✅ Prevents arrow keys from scrolling the page
     this.keyboard[event.key] = true;
   }
 
   @HostListener('window:keyup', ['$event'])
   onKeyUp(event: KeyboardEvent) {
+    event.preventDefault();
     this.keyboard[event.key] = false;
   }
 }
