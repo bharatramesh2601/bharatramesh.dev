@@ -127,7 +127,7 @@ export class ThreeSceneComponent implements AfterViewInit {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    event.preventDefault(); // ✅ Prevents arrow keys from scrolling the page
+    event.preventDefault(); // Prevents arrow keys from scrolling the page
     this.keyboard[event.key] = true;
   }
 
